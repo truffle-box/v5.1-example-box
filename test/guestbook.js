@@ -1,9 +1,9 @@
-const Guestbook = artifacts.require("Guestbook");
-const Lib = artifacts.require("Lib");
+const MultiGuestbook = artifacts.require("MultiGuestbook");
+const GuestbookLib = artifacts.require("GuestbookLib");
 
 const { forGuestbook } = require("./helpers");
 
-contract("Guestbook", function(accounts) {
+contract("MultiGuestbook", function(accounts) {
   const alice = accounts[0];
   const bob = accounts[1];
 
@@ -11,22 +11,22 @@ contract("Guestbook", function(accounts) {
   let helpers;
 
   before("setup tests", async function() {
-    guestbook = await Guestbook.deployed();
-    helpers = await forGuestbook(guestbook, Lib);
+    guestbook = await MultiGuestbook.deployed();
+    helpers = await forGuestbook(guestbook, GuestbookLib);
   });
 
   it("stores messages", async function() {
-    const { readMessagesTo } = helpers;
+    const { readGuestbookStorage } = helpers;
 
-    // use ENS name for recipient and sender
+    // use ENS name for guestbook address and sender
     await guestbook.sign(
       "alice.name", "hello", { from: "bob.name" }
     );
 
     // check for message from bob
-    const messages = await readMessagesTo(alice);
+    const messages = await readGuestbookStorage(alice);
     const message = messages.find(
-      ({ from }) => from === bob
+      ({ author }) => author === bob
     );
 
     assert.equal(message.contents, "hello");
@@ -41,8 +41,8 @@ contract("Guestbook", function(accounts) {
     );
 
     // check raw log matches signed guestbook message
-    const { from, contents } = await messageLog(receipt.rawLogs[0]);
-    assert.equal(from, bob);
+    const { author, contents } = await messageLog(receipt.rawLogs[0]);
+    assert.equal(author, bob);
     assert.equal(contents, "hello");
   });
 });

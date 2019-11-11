@@ -25,6 +25,9 @@
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
+  // otherwise decoding won't work
+  compileAll: true,
+
   ens: {
     enabled: true
   },

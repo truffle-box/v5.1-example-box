@@ -1,0 +1,27 @@
+{
+  "name": "v5.1-example-box",
+  "version": "1.0.0",
+  "description": "Example project to show Truffle v5.1 features",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/truffle-box/v5.1-example-box.git"
+  },
+  "keywords": [],
+  "author": "g. nicholas d'andrea <gnidan@trufflesuite.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/truffle-box/v5.1-example-box/issues"
+  },
+  "homepage": "https://github.com/truffle-box/v5.1-example-box#readme",
+  "dependencies": {
+    "@truffle/codec": "^3.1.0-ens-events.0",
+    "@truffle/decoder": "^3.0.16"
+  }
+}

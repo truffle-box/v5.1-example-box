@@ -1,4 +1,4 @@
-const Decoder = require("../../truffle/packages/decoder");
+const Decoder = require("@truffle/decoder");
 
 module.exports = {
   forGuestbook: async (instance, library) => {

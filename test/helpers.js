@@ -1,58 +1,93 @@
-const Decoder = require("@truffle/decoder");
-const Codec = require("@truffle/codec");
+const Decoder = require("../../truffle/packages/decoder");
 
 module.exports = {
-  forGuestbook: async (instance, Lib) => {
-    const decoder = await Decoder.forContractInstance(instance, [Lib]);
-
-    const readMessage = (message) => {
-      // struct members stored as name/value pairs
-      assert(message.type.typeClass === "struct");
-      assert(message.type.typeName === "Message");
-
-      // each message has contents and who wrote it
-      const { from, contents } = message.value.map(({ name, value }) => ({
-        [name]: value
-      })).reduce((a, b) => Object.assign({}, a, b));
-
-      assert(from.type.typeClass === "address");
-      assert(contents.type.typeClass === "string");
-
-      return {
-        from: from.value.asAddress,
-        contents: contents.value.asString
-      };
-    };
+  forGuestbook: async (instance, library) => {
+    const decoder = await Decoder.forContractInstance(instance, [library]);
 
     return {
-      messageLog: async (log) => {
-        const result = (await decoder.decodeLog(log))[0];
+      readSignGuestbookEvent: async (log) => {
+        const results = await decoder.decodeLog(log);
+
+        // log decoding may be ambiguous; here just grab the first result
+        const result = results[0];
 
         return readMessage(result.arguments[0].value)
       },
 
-      readMessagesTo: async (recipient) => {
-        // make sure we get `guestbook.forAddress[recipient]`
-        await decoder.watchMappingKey("forAddress", recipient);
+      readGuestbookStorage: async (guestbookAddress) => {
+        // make sure we get `guestbook.forAddress[guestbookAddress]`
+        await decoder.watchMappingKey("forAddress", guestbookAddress);
 
         // run decoder
         const forAddress = await decoder.variable("forAddress");
 
-        // stop watching
-        await decoder.unwatchMappingKey("forAddress", recipient);
+        // stop watching (just clean-up)
+        await decoder.unwatchMappingKey("forAddress", guestbookAddress);
 
-        // find matching mapping key
-        const guestbook = forAddress.value.find(
-          ({ key }) => key.value.asAddress === recipient
-        ).value;
-
-        assert(guestbook.type.typeClass === "struct");
-        assert(guestbook.type.typeName === "Guestbook");
-
-        const messages = guestbook.value[0].value;
-
-        return messages.value.map(readMessage);
+        const guestbook = findMatchingGuestbook(forAddress, guestbookAddress);
+        const log = getGuestbookLog(guestbook);
+        return readMessages(log);
       }
     }
   }
+}
+
+/*
+ * Functions for reading decoded guestbook data:
+ */
+
+// find matching Guestbook struct in decoded mapping
+const findMatchingGuestbook = (forAddress, guestbookAddress) => {
+  // ensure we have a mapping
+  assert(forAddress.type.typeClass === "mapping");
+
+  // with address key
+  assert(forAddress.type.keyType.typeClass === "address");
+
+  // and Guestbook struct
+  assert(forAddress.type.valueType.typeClass === "struct");
+  assert(forAddress.type.valueType.typeName === "Guestbook");
+
+  // then filter the mapping for the Guestbook at specified address
+  return forAddress.value.find(
+    ({ key }) => key.value.asAddress === guestbookAddress
+  ).value;
+};
+
+// read the log from a Guestbook struct
+const getGuestbookLog = (guestbook) => {
+  assert(guestbook.type.typeClass === "struct");
+  assert(guestbook.type.typeName === "Guestbook");
+
+  // find guestbook.log member of struct
+  return guestbook.value.find(({ name }) => name === "log").value;
+}
+
+// reads a decoded Message struct
+const readMessage = (message) => {
+  assert(message.type.typeClass === "struct");
+  assert(message.type.typeName === "Message");
+
+  // struct members stored as name/value pairs
+  const { author, contents } = message.value.map(({ name, value }) => ({
+    [name]: value
+  })).reduce((a, b) => Object.assign({}, a, b));
+
+  // each message has contents and who wrote it
+  assert(author.type.typeClass === "address");
+  assert(contents.type.typeClass === "string");
+
+  return {
+    author: author.value.asAddress,
+    contents: contents.value.asString
+  };
+};
+
+// read all Messages in a Guestbook log
+const readMessages = (guestbookLog) => {
+  assert(guestbookLog.type.typeClass === "array");
+  assert(guestbookLog.type.baseType.typeClass === "struct");
+  assert(guestbookLog.type.baseType.typeName === "Message");
+
+  return guestbookLog.value.map(readMessage);
 }

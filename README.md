@@ -3,6 +3,23 @@
 This box is meant to provide an illustration of several of the new features
 included with Truffle v5.1.
 
+## How to try this out
+
+1. Uninstall any old version of Truffle you might have and install v5.1:
+   ```
+   $ npm uninstall -g truffle
+   $ npm install -g truffle@^5.1.0
+   ```
+
+2. Make sure you're in an empty directory and unbox this project:
+   ```
+   $ truffle unbox v5.1-example
+   ```
+
+3. Explore the contracts, the migrations files, and the tests!
+
+Read on for more.
+
 ## ENS support
 
 The first feature to note is Truffle's support of ENS name resolution and

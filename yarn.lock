@@ -14,10 +14,10 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@truffle/codec@^0.1.0-next.1":
-  version "0.1.0-next.1"
-  resolved "https://registry.yarnpkg.com/@truffle/codec/-/codec-0.1.0-next.1.tgz#aace8cab81480d8bc4e15958a40af640a20244ed"
-  integrity sha512-YadCILTCnmWJ3muUQrj8wyx9WAn7AjW5hD0LrPEb+dyARQO8Q5zAM/0LTOmaG/FJW5Spbxh15F2tFV+euk6wvw==
+"@truffle/codec@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@truffle/codec/-/codec-0.1.0.tgz#f7683e4b659fe9b68e1ec464847b80ab84daa6dd"
+  integrity sha512-j0+x5/6AkvBjElOIHWW8E+SQBbwnKwZ9SKPuPk2wH9l7kucS6IOrEWnvOsxfQ81y4X5Y6O04Z9QhPslQ5Af+Xg==
   dependencies:
     big.js "^5.2.2"
     bn.js "^4.11.8"
@@ -29,24 +29,17 @@
     semver "^6.1.1"
     source-map-support "^0.5.13"
     utf8 "^3.0.0"
-    web3-utils "1.2.1"
+    web3-utils "1.2.2"
 
-"@truffle/decoder@^4.0.0-next.1":
-  version "4.0.0-next.1"
-  resolved "https://registry.yarnpkg.com/@truffle/decoder/-/decoder-4.0.0-next.1.tgz#cf6851a6c10b31c6f571d0a41af496642f7c27cc"
-  integrity sha512-64iaaFWPUA5RLtqI7MZhqrX/Hjnhyp8aPgpiYQdZ5O4sa+rlosc2NEirz2xnwetnJvQHC+J3PaFG91Cu4J5cIw==
+"@truffle/decoder@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@truffle/decoder/-/decoder-4.0.0.tgz#62d1d7bbd097d2e02fec877a5a19b58346d01cee"
+  integrity sha512-WfDo9EJifp3TGhQ6imAUv1PjLUCIemsv6yASb0gLumfXXrliaHx+wXVcqCncAsZ88QnPDQD3tGvDW8JlqQ8yNQ==
   dependencies:
-    "@truffle/codec" "^0.1.0-next.1"
-    big.js "^5.2.2"
+    "@truffle/codec" "^0.1.0"
     bn.js "^4.11.8"
     debug "^4.1.0"
-    lodash.clonedeep "^4.5.0"
-    lodash.escaperegexp "^4.1.2"
-    lodash.partition "^4.6.0"
-    lodash.sum "^4.0.2"
-    semver "^6.1.1"
-    utf8 "^3.0.0"
-    web3 "^1.2.1"
+    web3 "1.2.2"
 
 "@types/bn.js@^4.11.3", "@types/bn.js@^4.11.4":
   version "4.11.5"
@@ -1840,11 +1833,6 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
-randomhex@0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/randomhex/-/randomhex-0.1.5.tgz#baceef982329091400f2a2912c6cd02f1094f585"
-  integrity sha1-us7vmCMpCRQA8qKRLGzQLxCU9YU=
-
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -2574,19 +2562,6 @@ web3-shh@1.2.2:
     web3-core-subscriptions "1.2.2"
     web3-net "1.2.2"
 
-web3-utils@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.2.1.tgz#21466e38291551de0ab34558de21512ac4274534"
-  integrity sha512-Mrcn3l58L+yCKz3zBryM6JZpNruWuT0OCbag8w+reeNROSGVlXzUQkU+gtAwc9JCZ7tKUyg67+2YUGqUjVcyBA==
-  dependencies:
-    bn.js "4.11.8"
-    eth-lib "0.2.7"
-    ethjs-unit "0.1.6"
-    number-to-bn "1.7.0"
-    randomhex "0.1.5"
-    underscore "1.9.1"
-    utf8 "3.0.0"
-
 web3-utils@1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.2.2.tgz#b53a08c40d2c3f31d3c4a28e7d749405df99c8c0"
@@ -2601,7 +2576,7 @@ web3-utils@1.2.2:
     underscore "1.9.1"
     utf8 "3.0.0"
 
-web3@^1.2.1:
+web3@1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.2.2.tgz#b1b8b69aafdf94cbaeadbb68a8aa1df2ef266aec"
   integrity sha512-/ChbmB6qZpfGx6eNpczt5YSUBHEA5V2+iUCbn85EVb3Zv6FVxrOo5Tv7Lw0gE2tW7EEjASbCyp3mZeiZaCCngg==
@@ -2621,6 +2596,7 @@ web3@^1.2.1:
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
+    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"

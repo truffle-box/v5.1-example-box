@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/truffle-box/v5.1-example-box#readme",
   "devDependencies": {
-    "@truffle/codec": "^0.1.0-next.1",
-    "@truffle/decoder": "^4.0.0-next.1"
+    "@truffle/codec": "^0.1.0",
+    "@truffle/decoder": "^4.0.0"
   }
 }

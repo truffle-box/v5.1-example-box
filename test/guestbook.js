@@ -6,6 +6,7 @@ const { forGuestbook } = require("./helpers");
 contract("MultiGuestbook", function(accounts) {
   const alice = accounts[0];
   const bob = accounts[1];
+  const calhoun = accounts[2];
 
   let guestbook;
   let helpers;
@@ -15,34 +16,67 @@ contract("MultiGuestbook", function(accounts) {
     helpers = await forGuestbook(guestbook, GuestbookLib);
   });
 
-  it("stores messages", async function() {
-    const { readGuestbookStorage } = helpers;
+  it("returns guestbook signatures via ABI", async function() {
+    const message = "hello world!";
+
+    /*
+     * sign guestbook's own guestbook using ENS name for both function
+     * parameter and tx parameter
+     *
+     * to debug this transaction: comment this out and uncomment the next line
+     */
+    await guestbook.sign("multi.guestbook", message, { from: "alice.name" });
+    // await debug(guestbook.sign("multi.guestbook", message, { from: "alice.name" }));
+
+    /*
+     * read guestbook signatures via external view
+     *
+     * to debug this call: comment this out and uncomment the line below,
+     * run `truffle test --debug`
+     */
+    const signatures = await guestbook.signatures("multi.guestbook");
+    // const signatures = await debug(guestbook.signatures("multi.guestbook"));
+
+
+    // find alice's message
+    const { contents } = signatures.find( ({ author }) => author === alice );
+
+    assert.equal(contents, message);
+  });
+
+  it("stores guestbook messages", async function() {
+    const message = "interesting concept, perhaps... -bob";
 
     // use ENS name for guestbook address and sender
-    await guestbook.sign(
-      "alice.name", "hello", { from: "bob.name" }
-    );
+    await guestbook.sign("multi.guestbook", message, { from: "bob.name" });
 
-    // check for message from bob
-    const messages = await readGuestbookStorage(alice);
-    const message = messages.find(
+    const { readGuestbookStorage } = helpers;
+
+    // read storage and find message from bob
+    const messages = await readGuestbookStorage(guestbook.address);
+    const { contents } = messages.find(
       ({ author }) => author === bob
     );
 
-    assert.equal(message.contents, "hello");
+    assert.equal(contents, message);
   });
 
   it("emits events", async function() {
-    const { messageLog } = helpers;
+    const message = "no like button?";
 
     // capture receipt to inspect event
     const { receipt } = await guestbook.sign(
-      "alice.name", "hello", { from: "bob.name" }
+      "multi.guestbook", message, { from: "calhoun.name" }
     );
 
+    const { readSignGuestbookEvent } = helpers;
+
     // check raw log matches signed guestbook message
-    const { author, contents } = await messageLog(receipt.rawLogs[0]);
-    assert.equal(author, bob);
-    assert.equal(contents, "hello");
+    const { author, contents } = await readSignGuestbookEvent(
+      receipt.rawLogs[0]
+    );
+
+    assert.equal(author, calhoun);
+    assert.equal(contents, message);
   });
 });
